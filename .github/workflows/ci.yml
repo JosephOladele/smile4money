@@ -41,6 +41,10 @@ jobs:
       - name: Run matrix tooling tests
         run: python scripts/test_check_compat_matrix.py
 
+      # Issue #125: the release review validator gating Deploy to Mainnet.
+      - name: Run release review tooling tests
+        run: python scripts/test_check_release_review.py
+
   # ── Issue #894: Split into parallel escrow-tests and oracle-tests jobs ────
   escrow-tests:
     name: Escrow Tests
