@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { RateLimitError } from '../errors/RateLimitError.js';
 import { ProviderSchemaError } from '../errors/ProviderSchemaError.js';
+import { traceHeaders } from '../tracing/trace-context.js';
 
 /** Maps to the on-chain MatchResult enum. */
 export type MatchResult = 'Player1Wins' | 'Player2Wins' | 'Draw';
@@ -126,6 +127,8 @@ export async function fetchLichessResult(gameId: string): Promise<GameResult> {
       headers: {
         Accept: 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        // #123 — continue the active trace into the provider call.
+        ...traceHeaders(),
       },
       timeout: 10_000,
       validateStatus: (s) => s < 500,

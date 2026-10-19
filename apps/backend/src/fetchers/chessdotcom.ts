@@ -3,6 +3,7 @@ import { getChessDotComLimiterSingleton } from '../services/bottleneck-limiters.
 import logger from '../logger.js';
 import { RateLimitError } from '../errors/RateLimitError.js';
 import { ProviderSchemaError } from '../errors/ProviderSchemaError.js';
+import { traceHeaders } from '../tracing/trace-context.js';
 import type { MatchResult, GameResult } from './lichess.js';
 
 export { GameNotFoundError } from './lichess.js';
@@ -80,6 +81,8 @@ async function fetchArchive(username: string, year: number, month: number): Prom
   return limiter.schedule(async () => {
     try {
       const response = await axios.get(url, {
+        // #123 — continue the active trace into the provider call.
+        headers: traceHeaders(),
         timeout: 10_000,
         validateStatus: (s) => s < 500,
       });
