@@ -173,9 +173,15 @@ All secrets are managed through GitHub Actions Secrets. No secret values are eve
 
 ## 7. Toolchain and Dependency Pinning
 
+Which **combinations** of protocol, SDK and wallet are supported, and how upgrades are tested
+ahead of time, is defined in [compatibility.md](compatibility.md). The CI **Compatibility Matrix**
+job fails if any pin below drifts from it.
+
 | Tool | Pinned version | Location |
 |------|---------------|----------|
-| Rust | 1.81.0 | `rust-toolchain.toml`, all workflow files |
+| Rust | 1.88.0 | `rust-toolchain.toml`, all workflow files |
+| soroban-sdk | 22.0.11 | `Cargo.toml` `[workspace.dependencies]` |
+| @stellar/stellar-sdk | 16.0.1 | `apps/backend/package.json`, `apps/frontend/package.json` |
 | WASM target | `wasm32-unknown-unknown` | `rust-toolchain.toml` |
 | Stellar CLI | v22.0.1 | `deploy.yml` install step |
 | `cargo-audit` | 0.21.0 | `audit.yml` install step |
@@ -294,3 +300,5 @@ These items are not yet implemented and represent the next infrastructure work t
 | `environments.toml` | Network RPC URLs and passphrases |
 | `.env.example` | Template for environment variables |
 | `rust-toolchain.toml` | Pinned Rust toolchain |
+| `compatibility-matrix.json` | Supported and candidate version combinations ([compatibility.md](compatibility.md)) |
+| `.github/workflows/compatibility.yml` | Weekly/on-demand compatibility build of every combination |
